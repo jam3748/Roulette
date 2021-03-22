@@ -1,0 +1,42 @@
+table {
+    margin: 0 auto;
+    border: solid 5px;
+    border-collapse: collapse;
+}
+
+td {
+    border: solid 1px;
+}
+
+td {
+    font-size: 50px;
+    text-align: center;
+    padding: 5px;
+    width: 100px;
+    height: 100px;
+}
+
+button {
+    font-size: 25px;
+    height: 50px;
+    width: 125px;
+    margin: 20px 5px;
+}
+
+.button-container {
+    text-align: center;
+}
+
+.move_number {
+    background-color: rgb(245, 147, 111);
+    color: black;
+}
+
+.used_number {
+    background-color: rgb(243, 218, 209);
+    color: rgb(161, 159, 159)
+}
+.stop_number {
+    background-color: rgb(209, 61, 8);
+    color: black;
+}
