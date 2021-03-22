@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="ja">
+    <title>roulette</title>
+    <link rel="stylesheet" href="roulette.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        var random_num;
+        var start_flag = false;　// ボタンの選択状態
+        var interval_id; // 一定間隔繰り返し処理
+        var array_num = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
+
+        // ルーレット板を作成
+        function roulette() {
+            var increase_num = 1; // ルーレット板の表示させる数字
+            // tr 1行追加を4回繰り返す
+            for (var i = 1; i <= 4; i++) {
+                $('#matrix').append('<tr id="tr' + i + '"></tr>');
+                // td 1列追加を4回繰り返す
+                for (var j = 1; j <= 4; j++) {
+                    $('#tr' + i).append('<td id="td' + increase_num + '">' + increase_num++ + '</td>');
+                }
+            }
+        }
+
+        // ルーレットを回す処理
+        function turn_roulette() {
+            // 2回目以降の繰り返しで直前の出た目の色を取り消す
+            $('#td' + array_num[random_num]).removeClass('move_number');
+            // 1〜16の乱数を取得
+            random_num = Math.floor(Math.random() * array_num.length);
+            // ルーレットで出た目の色を変更する
+            $('#td' + array_num[random_num]).addClass('move_number');
+        }
+
+        // ルーレットをスタート
+        // 回転中はスタートボタンを押せなくする
+        function start_roulette() {
+            $('td').removeClass('stop_number');
+            // ルーレット
+            if (start_flag === false) {
+                // 0.1秒ごとにルーレットを回す
+                interval_id = setInterval(turn_roulette, 100);
+                start_flag = true;
+            }
+            // disabled設定
+            $('#start').prop("disabled", true);
+            $('#stop').prop("disabled", false);
+        }
+
+        // ルーレットを止める
+        // 再びボタンを押せるようになる
+        function stop_roulette() {
+            clearInterval(interval_id);
+            start_flag = false;
+            // 停止したマスの色を変更する
+            $('#td' + array_num[random_num]).addClass('stop_number used_number');
+            // 一度選ばれたマスの数字を配列から削除
+            array_num.splice(random_num, 1);
+            // disabled設定
+            $('#start').prop("disabled", false);
+            $('#stop').prop("disabled", true);
+            // 16マス全て埋まったらスタートボタンを押せないようにする
+            if (array_num.length === 0) {
+                $('#start').prop("disabled", true);
+                $('td').removeClass('stop_number');
+            }
+        }
+
+        // ルーレットを最初の状態に戻す
+        function reset_roulette() {
+            clearInterval(interval_id);
+            start_flag = false;
+            // 配列の中身を初期化
+            array_num = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
+            // td要素のCSSを削除
+            $('td').removeClass('stop_number used_number move_number');
+            // disabled設定
+            $('#start').prop("disabled", false);
+            $('#stop').prop("disabled", true);
+        }
+
+        $(function () {
+            // ルーレットを表示
+            roulette();
+            // 最初はストップボタンを押せないようにする
+            $('#stop').prop("disabled", true);
+            // スタートボタン
+            $('#start').click(start_roulette);
+            // ストップボタン
+            $('#stop').click(stop_roulette);
+            // リセットボタン
+            $('#reset').click(reset_roulette);
+        }
+        );
+
+    </script>
+</head>
+
+<body>
+    <table id="matrix"></table>
+    <div class="button-container">
+        <button id="start">スタート</button>
+        <button id="stop">ストップ</button>
+        <button id="reset">リセット</button>
+    </div>
+</body>
+
+</html>
